@@ -1,0 +1,955 @@
+:root {
+  --bg: #f7f1ea;
+  --surface: #fffaf5;
+  --surface-strong: #ffffff;
+
+  --ink: #201b24;
+  --muted: #756c78;
+  --line: rgba(32, 27, 36, 0.10);
+
+  --coral: #ef7467;
+  --coral-dark: #c95351;
+  --peach: #f4a477;
+
+  --green: #476d5b;
+  --green-soft: #dce8df;
+
+  --splurge: #bd4d72;
+  --splurge-soft: #f4d9e2;
+
+  --danger: #a5364b;
+
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+
+  --shadow:
+    0 18px 50px rgba(63, 42, 50, 0.08);
+
+  --shadow-small:
+    0 8px 22px rgba(63, 42, 50, 0.07);
+}
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(244, 164, 119, 0.20),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      #f8eee7 0%,
+      var(--bg) 32%,
+      #f5f0ea 100%
+    );
+
+  color: var(--ink);
+
+  font-family:
+    "Avenir Next",
+    Avenir,
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(239, 116, 103, 0.28);
+  outline-offset: 2px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+/* =========================================================
+   CONTENEDOR
+   ========================================================= */
+
+.app-shell {
+  width: min(100%, 560px);
+  min-height: 100vh;
+  margin: 0 auto;
+
+  padding:
+    max(22px, env(safe-area-inset-top))
+    18px
+    max(28px, env(safe-area-inset-bottom));
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   CABECERA
+   ========================================================= */
+
+.app-header {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 24px;
+  padding-top: 5px;
+}
+
+.brand h1 {
+  margin: 0;
+
+  font-size: clamp(2.45rem, 11vw, 3.8rem);
+  line-height: 0.92;
+
+  font-weight: 900;
+  letter-spacing: -0.065em;
+}
+
+.brand p {
+  margin: 10px 0 0;
+
+  color: var(--muted);
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.days-remaining {
+  flex: 0 0 auto;
+
+  margin-top: 3px;
+  padding: 8px 11px;
+
+  border: 1px solid rgba(32, 27, 36, 0.08);
+  border-radius: 999px;
+
+  background: rgba(255, 250, 245, 0.78);
+
+  box-shadow: var(--shadow-small);
+
+  color: var(--ink);
+
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+
+/* =========================================================
+   REFERENCIAS DE DINERO REAL
+   ========================================================= */
+
+.money-reference {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 12px;
+}
+
+.reference-card {
+  min-width: 0;
+  padding: 15px 16px;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+
+  background: rgba(255, 250, 245, 0.78);
+
+  box-shadow: var(--shadow-small);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.reference-label {
+  display: block;
+  margin-bottom: 5px;
+
+  color: var(--muted);
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.reference-card strong {
+  display: block;
+
+  overflow: hidden;
+
+  font-size: 1.13rem;
+  font-weight: 850;
+
+  letter-spacing: -0.025em;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reference-card small {
+  display: block;
+  margin-top: 2px;
+
+  color: var(--muted);
+
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.exchange-rate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 8px 2px 22px;
+
+  color: var(--muted);
+
+  font-size: 0.73rem;
+  font-weight: 650;
+}
+
+.text-button {
+  padding: 4px 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--coral-dark);
+
+  font-size: 0.78rem;
+  font-weight: 850;
+
+  cursor: pointer;
+}
+
+.text-button:disabled {
+  color: var(--muted);
+  opacity: 0.45;
+
+  cursor: default;
+}
+
+
+/* =========================================================
+   HOY
+   ========================================================= */
+
+.today-card {
+  position: relative;
+  overflow: hidden;
+
+  margin-bottom: 14px;
+  padding: 23px 22px 21px;
+
+  border-radius: var(--radius-xl);
+
+  background:
+    linear-gradient(
+      135deg,
+      #f1a073 0%,
+      #ef7768 48%,
+      #df6264 100%
+    );
+
+  box-shadow:
+    0 20px 45px rgba(204, 89, 87, 0.20);
+
+  color: #27191d;
+}
+
+.today-card::after {
+  content: "";
+
+  position: absolute;
+  top: -65px;
+  right: -60px;
+
+  width: 180px;
+  height: 180px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.section-heading {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-heading > span {
+  font-size: 0.8rem;
+  font-weight: 900;
+
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.section-heading small {
+  font-size: 0.74rem;
+  font-weight: 750;
+
+  opacity: 0.74;
+}
+
+.today-amount {
+  position: relative;
+  z-index: 1;
+
+  margin: 7px 0 15px;
+
+  font-size: clamp(4.4rem, 20vw, 6.6rem);
+  line-height: 0.95;
+
+  font-weight: 900;
+  letter-spacing: -0.075em;
+}
+
+.today-progress {
+  position: relative;
+  z-index: 1;
+
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: rgba(55, 27, 33, 0.15);
+}
+
+.today-progress > div {
+  width: 100%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  transition: width 250ms ease;
+}
+
+.close-preview {
+  position: relative;
+  z-index: 1;
+
+  margin: 11px 0 0;
+
+  font-size: 0.76rem;
+  font-weight: 750;
+
+  opacity: 0.78;
+}
+
+
+/* =========================================================
+   SPLURGE
+   ========================================================= */
+
+.splurge-card {
+  position: relative;
+  overflow: hidden;
+
+  margin-bottom: 22px;
+  padding: 19px 21px;
+
+  border: 1px solid rgba(189, 77, 114, 0.14);
+  border-radius: var(--radius-lg);
+
+  background:
+    linear-gradient(
+      135deg,
+      #f6dfe6 0%,
+      #f1cbd8 100%
+    );
+
+  box-shadow: var(--shadow-small);
+
+  color: #4d2233;
+
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.splurge-amount {
+  position: relative;
+  z-index: 1;
+
+  margin-top: 3px;
+
+  font-size: 3rem;
+  line-height: 1;
+
+  font-weight: 900;
+  letter-spacing: -0.055em;
+}
+
+.splurge-card.negative {
+  border-color: rgba(165, 54, 75, 0.22);
+
+  background:
+    linear-gradient(
+      135deg,
+      #f4d5db 0%,
+      #eab7c2 100%
+    );
+
+  color: #711f35;
+}
+
+
+/* =========================================================
+   TARJETAS GENERALES
+   ========================================================= */
+
+.expense-card,
+.history-card {
+  margin-bottom: 15px;
+  padding: 20px;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+
+  background: rgba(255, 250, 245, 0.90);
+
+  box-shadow: var(--shadow);
+}
+
+.expense-header,
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+.expense-header h2,
+.history-header h2,
+.dialog-content h2 {
+  margin: 0;
+
+  font-size: 1.05rem;
+  font-weight: 900;
+
+  letter-spacing: -0.025em;
+}
+
+
+/* =========================================================
+   SELECTOR ESENCIAL / SPLURGE
+   ========================================================= */
+
+.expense-mode {
+  display: flex;
+
+  padding: 3px;
+
+  border-radius: 999px;
+
+  background: #eee5df;
+}
+
+.mode-button {
+  min-height: 34px;
+  padding: 6px 11px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: var(--muted);
+
+  font-size: 0.72rem;
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.mode-button.active {
+  background: var(--surface-strong);
+
+  box-shadow:
+    0 3px 10px rgba(60, 40, 48, 0.09);
+
+  color: var(--ink);
+}
+
+#splurgeModeBtn.active {
+  background: var(--splurge);
+  color: #fff;
+}
+
+
+/* =========================================================
+   FORMULARIO
+   ========================================================= */
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label,
+.field-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: var(--muted);
+
+  font-size: 0.72rem;
+  font-weight: 850;
+
+  letter-spacing: 0.035em;
+}
+
+select,
+input {
+  width: 100%;
+  min-height: 48px;
+
+  border: 1px solid rgba(32, 27, 36, 0.12);
+  border-radius: var(--radius-sm);
+
+  background: #fffdfb;
+
+  color: var(--ink);
+
+  font-weight: 700;
+}
+
+select {
+  padding: 0 13px;
+}
+
+input {
+  padding: 0 14px;
+}
+
+select:focus,
+input:focus {
+  border-color: rgba(239, 116, 103, 0.65);
+}
+
+.amount-input {
+  position: relative;
+}
+
+.amount-input > span {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+
+  transform: translateY(-50%);
+
+  color: var(--muted);
+
+  font-weight: 850;
+}
+
+.amount-input input {
+  padding-left: 31px;
+
+  font-size: 1.25rem;
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   MEDIO DE PAGO
+   ========================================================= */
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.payment-button {
+  min-height: 46px;
+
+  border: 1px solid rgba(32, 27, 36, 0.11);
+  border-radius: var(--radius-sm);
+
+  background: #fffdfb;
+
+  color: var(--muted);
+
+  font-size: 0.82rem;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.payment-button.active {
+  border-color: rgba(71, 109, 91, 0.28);
+
+  background: var(--green-soft);
+
+  color: #315142;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.primary-button {
+  width: 100%;
+  min-height: 50px;
+
+  border: 0;
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--coral) 0%,
+      #dc5d63 100%
+    );
+
+  box-shadow:
+    0 9px 22px rgba(220, 93, 99, 0.19);
+
+  color: #fff;
+
+  font-size: 0.86rem;
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+.primary-button:active,
+.secondary-button:active,
+.payment-button:active,
+.mode-button:active {
+  transform: translateY(1px);
+}
+
+.secondary-button {
+  min-height: 45px;
+  padding: 0 15px;
+
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  background: rgba(255, 250, 245, 0.84);
+
+  color: var(--ink);
+
+  font-size: 0.78rem;
+  font-weight: 850;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
+
+.history-list {
+  display: grid;
+  gap: 8px;
+}
+
+.empty-history {
+  padding: 16px 0 5px;
+
+  color: var(--muted);
+
+  font-size: 0.82rem;
+  font-weight: 650;
+
+  text-align: center;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.history-item:last-child {
+  border-bottom: 0;
+}
+
+.history-main {
+  min-width: 0;
+}
+
+.history-title {
+  overflow: hidden;
+
+  font-size: 0.84rem;
+  font-weight: 850;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-meta {
+  margin-top: 2px;
+
+  color: var(--muted);
+
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.history-amount {
+  align-self: center;
+
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.history-item.splurge .history-amount {
+  color: var(--splurge);
+}
+
+
+/* =========================================================
+   ACCIONES SECUNDARIAS
+   ========================================================= */
+
+.secondary-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  margin-top: 4px;
+}
+
+
+/* =========================================================
+   FOOTER / RESET
+   ========================================================= */
+
+.app-footer {
+  display: flex;
+  justify-content: center;
+
+  padding: 27px 0 7px;
+}
+
+.reset-button {
+  padding: 5px 7px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: rgba(117, 108, 120, 0.55);
+
+  font-size: 0.66rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   DIALOG
+   ========================================================= */
+
+dialog {
+  width: min(calc(100% - 32px), 430px);
+
+  padding: 0;
+
+  border: 0;
+  border-radius: var(--radius-lg);
+
+  background: var(--surface);
+
+  box-shadow:
+    0 25px 80px rgba(32, 27, 36, 0.25);
+
+  color: var(--ink);
+}
+
+dialog::backdrop {
+  background: rgba(30, 23, 31, 0.48);
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.dialog-content {
+  padding: 22px;
+}
+
+.dialog-content h2 {
+  margin-bottom: 20px;
+}
+
+.dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+
+  margin-top: 8px;
+}
+
+
+/* =========================================================
+   PANTALLAS PEQUEÑAS
+   ========================================================= */
+
+@media (max-width: 390px) {
+
+  .app-shell {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .app-header {
+    gap: 10px;
+  }
+
+  .brand h1 {
+    font-size: 2.55rem;
+  }
+
+  .brand p {
+    font-size: 0.78rem;
+  }
+
+  .days-remaining {
+    padding: 7px 9px;
+    font-size: 0.65rem;
+  }
+
+  .money-reference {
+    gap: 8px;
+  }
+
+  .reference-card {
+    padding: 13px;
+  }
+
+  .today-card {
+    padding: 21px 18px 19px;
+  }
+
+  .today-amount {
+    font-size: 4.65rem;
+  }
+
+  .expense-card,
+  .history-card {
+    padding: 17px;
+  }
+
+  .expense-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .expense-mode {
+    width: 100%;
+  }
+
+  .mode-button {
+    flex: 1;
+  }
+
+}
+
+
+/* =========================================================
+   IPHONE / SAFE AREA
+   ========================================================= */
+
+@supports (
+  padding-bottom: env(safe-area-inset-bottom)
+) {
+
+  .app-shell {
+    padding-bottom:
+      calc(
+        24px + env(safe-area-inset-bottom)
+      );
+  }
+
+}
+
+
+/* =========================================================
+   REDUCCIÓN DE MOVIMIENTO
+   ========================================================= */
+
+@media (
+  prefers-reduced-motion: reduce
+) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+
+}

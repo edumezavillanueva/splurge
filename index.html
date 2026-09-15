@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#17131f">
+
+  <meta
+    name="description"
+    content="SPLURGE · Spend smart. Splurge better."
+  >
+
+  <title>SPLURGE</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- CABECERA -->
+    <header class="app-header">
+      <div class="brand">
+        <h1>SPLURGE</h1>
+        <p>Spend smart. Splurge better.</p>
+      </div>
+
+      <div id="daysRemaining" class="days-remaining">
+        23 días restantes
+      </div>
+    </header>
+
+
+    <main>
+
+      <!-- REFERENCIAS DE DINERO REAL -->
+      <section class="money-reference">
+
+        <div class="reference-card">
+          <span class="reference-label">Banco</span>
+          <strong id="bankBalance">$1.100.000</strong>
+          <small id="bankBalanceEur">≈ €991</small>
+        </div>
+
+        <div class="reference-card">
+          <span class="reference-label">Efectivo</span>
+          <strong id="cashBalance">€270</strong>
+          <small>Disponible</small>
+        </div>
+
+      </section>
+
+      <div class="exchange-rate">
+        <span id="exchangeRateText">
+          €1 ≈ $1.110 CLP
+        </span>
+
+        <button
+          id="editBalancesBtn"
+          class="text-button"
+          type="button"
+        >
+          Editar
+        </button>
+      </div>
+
+
+      <!-- PRESUPUESTO DE HOY -->
+      <section class="today-card">
+
+        <div class="section-heading">
+          <span>HOY</span>
+          <small>de €70 diarios</small>
+        </div>
+
+        <div id="todayBalance" class="today-amount">
+          €70
+        </div>
+
+        <div class="today-progress">
+          <div id="todayProgressBar"></div>
+        </div>
+
+        <p id="closePreview" class="close-preview">
+          Si cerraras el día ahora → +€70 a SPLURGE
+        </p>
+
+      </section>
+
+
+      <!-- SPLURGE -->
+      <section
+        id="splurgeCard"
+        class="splurge-card"
+      >
+
+        <div class="section-heading">
+          <span>SPLURGE</span>
+          <small>Saldo</small>
+        </div>
+
+        <div id="splurgeBalance" class="splurge-amount">
+          €0
+        </div>
+
+      </section>
+
+
+      <!-- REGISTRAR GASTO -->
+      <section class="expense-card">
+
+        <div class="expense-header">
+          <h2>Registrar gasto</h2>
+
+          <div
+            class="expense-mode"
+            role="group"
+            aria-label="Tipo de gasto"
+          >
+            <button
+              id="essentialModeBtn"
+              class="mode-button active"
+              type="button"
+            >
+              Esencial
+            </button>
+
+            <button
+              id="splurgeModeBtn"
+              class="mode-button"
+              type="button"
+            >
+              SPLURGE
+            </button>
+          </div>
+        </div>
+
+
+        <form id="expenseForm">
+
+          <!-- CATEGORÍA -->
+          <div
+            id="categorySection"
+            class="form-group"
+          >
+            <label for="expenseCategory">
+              Categoría
+            </label>
+
+            <select id="expenseCategory">
+              <option value="Comida">🍴 Comida</option>
+              <option value="Transporte">🚇 Transporte</option>
+              <option value="Panoramas">🎟️ Panoramas</option>
+              <option value="Necesidades">🧴 Necesidades</option>
+              <option value="Otro">➕ Otro</option>
+            </select>
+          </div>
+
+
+          <!-- DESCRIPCIÓN -->
+          <div
+            id="descriptionGroup"
+            class="form-group hidden"
+          >
+            <label for="expenseDescription">
+              Descripción
+            </label>
+
+            <input
+              id="expenseDescription"
+              type="text"
+              maxlength="80"
+              autocomplete="off"
+              placeholder="¿Qué fue?"
+            >
+          </div>
+
+
+          <!-- MONTO -->
+          <div class="form-group">
+            <label for="expenseAmount">
+              Monto
+            </label>
+
+            <div class="amount-input">
+              <span>€</span>
+
+              <input
+                id="expenseAmount"
+                type="number"
+                min="0.01"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="0,00"
+                required
+              >
+            </div>
+          </div>
+
+
+          <!-- MEDIO DE PAGO -->
+          <div class="form-group">
+
+            <span class="field-label">
+              Medio de pago
+            </span>
+
+            <div
+              class="payment-methods"
+              role="group"
+              aria-label="Medio de pago"
+            >
+              <button
+                id="debitPaymentBtn"
+                class="payment-button active"
+                type="button"
+              >
+                💳 Débito
+              </button>
+
+              <button
+                id="cashPaymentBtn"
+                class="payment-button"
+                type="button"
+              >
+                💶 Efectivo
+              </button>
+            </div>
+
+          </div>
+
+
+          <button
+            class="primary-button"
+            type="submit"
+          >
+            Registrar gasto
+          </button>
+
+        </form>
+
+      </section>
+
+
+      <!-- HISTORIAL -->
+      <section class="history-card">
+
+        <div class="history-header">
+          <h2>Últimos movimientos</h2>
+
+          <button
+            id="undoBtn"
+            class="text-button"
+            type="button"
+            disabled
+          >
+            Deshacer último
+          </button>
+        </div>
+
+        <div id="historyList" class="history-list">
+
+          <div class="empty-history">
+            Todavía no hay movimientos.
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ACCIONES -->
+      <section class="secondary-actions">
+
+        <button
+          id="closeDayBtn"
+          class="secondary-button"
+          type="button"
+        >
+          Cerrar el día
+        </button>
+
+        <button
+          id="exportBtn"
+          class="secondary-button"
+          type="button"
+        >
+          Exportar gastos
+        </button>
+
+      </section>
+
+
+      <!-- RESET DISCRETO -->
+      <footer class="app-footer">
+
+        <button
+          id="resetAppBtn"
+          class="reset-button"
+          type="button"
+        >
+          Restablecer app
+        </button>
+
+      </footer>
+
+    </main>
+
+  </div>
+
+
+  <!-- MODAL EDITAR SALDOS -->
+  <dialog id="balancesDialog">
+
+    <form
+      id="balancesForm"
+      method="dialog"
+      class="dialog-content"
+    >
+
+      <h2>Editar saldos</h2>
+
+      <div class="form-group">
+        <label for="bankBalanceInput">
+          Banco · CLP
+        </label>
+
+        <input
+          id="bankBalanceInput"
+          type="number"
+          min="0"
+          step="1"
+          inputmode="numeric"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="cashBalanceInput">
+          Efectivo · EUR
+        </label>
+
+        <input
+          id="cashBalanceInput"
+          type="number"
+          min="0"
+          step="0.01"
+          inputmode="decimal"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="exchangeRateInput">
+          CLP por €1
+        </label>
+
+        <input
+          id="exchangeRateInput"
+          type="number"
+          min="1"
+          step="1"
+          inputmode="numeric"
+        >
+      </div>
+
+      <div class="dialog-actions">
+
+        <button
+          id="cancelBalancesBtn"
+          class="secondary-button"
+          type="button"
+        >
+          Cancelar
+        </button>
+
+        <button
+          class="primary-button"
+          type="submit"
+        >
+          Guardar
+        </button>
+
+      </div>
+
+    </form>
+
+  </dialog>
+
+
+  <script src="app.js"></script>
+
+</body>
+</html>
