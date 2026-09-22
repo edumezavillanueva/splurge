@@ -6,7 +6,7 @@ const DEFAULTS = {
   todayBalance: 70,
   splurgeBalance: 0,
   bankBalanceCLP: 1100000,
-  cashBalanceEUR: 270,
+  cashBalanceEUR: 320,
   exchangeRate: 1110,
   expenseMode: "essential",
   paymentMethod: "debit",
@@ -19,6 +19,8 @@ const TRIP_START = new Date(2026, 8, 22);
 const TRIP_END = new Date(2026, 9, 14);
 
 let state = loadState();
+
+let pendingBalanceUpdate = null;
 
 const els = {
   daysRemaining: document.getElementById("daysRemaining"),
@@ -61,7 +63,13 @@ const els = {
   bankBalanceInput: document.getElementById("bankBalanceInput"),
   cashBalanceInput: document.getElementById("cashBalanceInput"),
   exchangeRateInput: document.getElementById("exchangeRateInput"),
-  cancelBalancesBtn: document.getElementById("cancelBalancesBtn")
+  cancelBalancesBtn: document.getElementById("cancelBalancesBtn"),
+  incomeDialog: document.getElementById("incomeDialog"),
+  incomeMessage: document.getElementById("incomeMessage"),
+  incomeCurrentSplurge: document.getElementById("incomeCurrentSplurge"),
+  incomeResultSplurge: document.getElementById("incomeResultSplurge"),
+  incomeBankOnlyBtn: document.getElementById("incomeBankOnlyBtn"),
+  incomeAddBtn: document.getElementById("incomeAddBtn")
 };
 
 
@@ -828,6 +836,7 @@ function ensureDailyBudgetField() {
 }
 
 function saveBalances(event) {
+
   event.preventDefault();
 
   const bank =
@@ -869,28 +878,108 @@ function saveBalances(event) {
     return;
   }
 
-  state.bankBalanceCLP =
+  const newBank =
     Math.round(bank);
 
-  state.cashBalanceEUR =
+  const newCash =
     roundMoney(cash);
 
-  state.exchangeRate =
+  const newRate =
     Math.round(rate);
 
+  const bankIncreaseCLP =
+    Math.max(
+      0,
+      newBank -
+      state.bankBalanceCLP
+    );
 
-  if (newDaily !== state.dailyBudget) {
+  if (bankIncreaseCLP > 0) {
+
+    const incomeEUR =
+      roundMoney(
+        bankIncreaseCLP /
+        newRate
+      );
+
+    pendingBalanceUpdate = {
+      bank: newBank,
+      cash: newCash,
+      rate: newRate,
+      daily: newDaily,
+      bankIncreaseCLP,
+      incomeEUR
+    };
+
+    els.incomeMessage.textContent =
+      `Tu Banco aumentó ${formatCLP(
+        bankIncreaseCLP
+      )}. Equivale aproximadamente a ${formatEUR(
+        incomeEUR
+      )}.`;
+
+    els.incomeCurrentSplurge.textContent =
+      formatEUR(
+        state.splurgeBalance
+      );
+
+    els.incomeResultSplurge.textContent =
+      formatEUR(
+        roundMoney(
+          state.splurgeBalance +
+          incomeEUR
+        )
+      );
+
+    els.incomeAddBtn.textContent =
+      `Agregar ${formatEUR(
+        incomeEUR
+      )}`;
+
+    els.balancesDialog.close();
+    els.incomeDialog.showModal();
+
+    return;
+  }
+
+  applyBalanceUpdate({
+    bank: newBank,
+    cash: newCash,
+    rate: newRate,
+    daily: newDaily
+  });
+}
+
+
+function applyBalanceUpdate(
+  update,
+  addIncomeToSplurge = false
+) {
+
+  state.bankBalanceCLP =
+    update.bank;
+
+  state.cashBalanceEUR =
+    update.cash;
+
+  state.exchangeRate =
+    update.rate;
+
+  if (update.daily !== state.dailyBudget) {
+
     const applyToday =
       confirm(
         `Cambiar presupuesto diario de ${formatEUR(
           state.dailyBudget
         )} a ${formatEUR(
-          newDaily
+          update.daily
         )}.\n\nAceptar = aplicar desde HOY.\nCancelar = aplicar desde MAÑANA.`
       );
 
     if (applyToday) {
-      const todayKey = localDateKey();
+
+      const todayKey =
+        localDateKey();
 
       const essentialSpentToday =
         roundMoney(
@@ -901,7 +990,10 @@ function saveBalances(event) {
             )
             .reduce(
               (sum, item) =>
-                sum + Number(item.amountEUR || 0),
+                sum +
+                Number(
+                  item.amountEUR || 0
+                ),
               0
             )
         );
@@ -920,13 +1012,14 @@ function saveBalances(event) {
           Math.max(
             0,
             essentialSpentToday -
-            newDaily
+            update.daily
           )
         );
 
       const splurgeAdjustment =
         roundMoney(
-          oldExcess - newExcess
+          oldExcess -
+          newExcess
         );
 
       state.splurgeBalance =
@@ -936,27 +1029,67 @@ function saveBalances(event) {
         );
 
       state.dailyBudget =
-        newDaily;
+        update.daily;
 
       state.todayBalance =
         roundMoney(
           Math.max(
             0,
-            newDaily -
+            update.daily -
             essentialSpentToday
           )
         );
 
       state.nextDailyBudget = null;
+
     } else {
+
       state.nextDailyBudget =
-        newDaily;
+        update.daily;
+
     }
   }
 
-  els.balancesDialog.close();
+  if (
+    addIncomeToSplurge &&
+    update.incomeEUR
+  ) {
+    state.splurgeBalance =
+      roundMoney(
+        state.splurgeBalance +
+        update.incomeEUR
+      );
+  }
 
+  pendingBalanceUpdate = null;
+
+  saveState();
   render();
+
+  if (els.balancesDialog.open) {
+    els.balancesDialog.close();
+  }
+}
+
+
+function resolveIncomeUpdate(
+  addToSplurge
+) {
+
+  if (!pendingBalanceUpdate) {
+    els.incomeDialog.close();
+    return;
+  }
+
+  const update =
+    pendingBalanceUpdate;
+
+  els.incomeDialog.close();
+
+  applyBalanceUpdate(
+    update,
+    addToSplurge
+  );
 }
 
 
@@ -1188,6 +1321,17 @@ els.balancesForm.addEventListener(
   "submit",
   saveBalances
 );
+
+els.incomeBankOnlyBtn.addEventListener(
+  "click",
+  () => resolveIncomeUpdate(false)
+);
+
+els.incomeAddBtn.addEventListener(
+  "click",
+  () => resolveIncomeUpdate(true)
+);
+
 
 els.resetAppBtn.addEventListener(
   "click",

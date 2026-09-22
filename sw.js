@@ -1,4 +1,4 @@
-const CACHE_NAME = "splurge-v5";
+const CACHE_NAME = "splurge-v8";
 
 const APP_SHELL = [
   "./",

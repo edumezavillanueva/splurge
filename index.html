@@ -394,6 +394,51 @@
   </dialog>
 
 
+  <!-- MODAL NUEVO INGRESO -->
+  <dialog id="incomeDialog">
+
+    <div class="dialog-content">
+
+      <h2>Nuevo ingreso detectado</h2>
+
+      <p id="incomeMessage"></p>
+
+      <p>
+        <strong>SPLURGE actual:</strong>
+        <span id="incomeCurrentSplurge"></span>
+      </p>
+
+      <p>
+        <strong>Si lo agregas:</strong>
+        <span id="incomeResultSplurge"></span>
+      </p>
+
+      <div class="dialog-actions">
+
+        <button
+          id="incomeBankOnlyBtn"
+          class="secondary-button"
+          type="button"
+        >
+          Solo actualizar Banco
+        </button>
+
+        <button
+          id="incomeAddBtn"
+          class="primary-button"
+          type="button"
+        >
+          Agregar a SPLURGE
+        </button>
+
+      </div>
+
+    </div>
+
+  </dialog>
+
+
+
   <script src="app.js"></script>
 
 </body>
